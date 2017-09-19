@@ -30,6 +30,10 @@ class MCP3428():
             self.sample_rate = MCP3428_SAMPLE_12_BIT
         if not hasattr(self, 'gain'):
             self.gain = MCP3428_GAIN_1X
+        if not hasattr(self, 'analog_range'):
+            self.analog_range = [0, 11.17]
+        self.bits_less = (4-(self.sample_rate/2))
+        self.resolution = float(self.analog_range[1] - self.analog_range[0]) / float(65535 >> (self.bits_less + 1))
         self.smbus = smbus
 
     def take_readings(self):
@@ -43,14 +47,22 @@ class MCP3428():
 #           It also does not allow a write command to just target a registry.
 #           These two things combined have forced an extra byte of 0 to be written with unknown consequence.
         self.smbus.write_byte_data(self.address, self.mode | self.sample_rate | self.gain | (32*channel), 0)
-        time.sleep(.1)
-        reading = self.smbus.read_i2c_block_data(self.address, self.mode | self.sample_rate | self.gain | (32*channel), 2)
-        reading = self.convert_data(reading)
+        start = float(time.time())
+        while float(time.time() < start+1) :
+            if ((self.smbus.read_i2c_block_data(self.address, self.mode | self.sample_rate | self.gain | (32*channel))[2]) & 128) == 0:
+                reading = self.smbus.read_i2c_block_data(self.address, self.mode | self.sample_rate | self.gain | (32*channel), 2)
+                reading = self.convert_data(reading)
+                break
         return reading
         
     def convert_data(self, data):
-        bits_less = (4-(self.sample_rate/2))
-        cdata = ((data[0] << 8) + data[1]) & (65535 >> bits_less);
-        if cdata > (1 << (16-(bits_less+1)))-1:
-            cdata -= ((1 << (16-(2+2)))-1)
-        return cdata
+        raw_data = ((data[0] << 8) + data[1]) & (65535 >> self.bits_less)
+        if raw_data > (1 << (16-(self.bits_less+1)))-1:
+            raw_data -= ((1 << (16-(2+2)))-1)
+        print 'raw_data'
+        print raw_data
+        analog_value = float(raw_data) * float(self.resolution)
+#         analog_value = float(raw_data) * float(.01109)
+            
+        return analog_value
+    
