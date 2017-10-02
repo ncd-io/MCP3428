@@ -63,6 +63,4 @@ class MCP3428():
         print raw_data
         analog_value = float(raw_data) * float(self.resolution)
 #         analog_value = float(raw_data) * float(.01109)
-            
         return analog_value
-    
