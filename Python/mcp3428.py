@@ -59,8 +59,8 @@ class MCP3428():
         raw_data = ((data[0] << 8) + data[1]) & (65535 >> self.bits_less)
         if raw_data > (1 << (16-(self.bits_less+1)))-1:
             raw_data -= ((1 << (16-(2+2)))-1)
-        print 'raw_data'
-        print raw_data
+#         print 'raw_data'
+#         print raw_data
         analog_value = float(raw_data) * float(self.resolution)
 #         analog_value = float(raw_data) * float(.01109)
         return analog_value
