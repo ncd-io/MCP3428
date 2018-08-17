@@ -19,7 +19,7 @@ NCD has been designing and manufacturing computer control products since 1995.  
 
 The libary must be imported into your application and an I2C bus must be created with the SMBus module.
 
-Once the library is imported and the I2C Bus created you can create a BMP280 object, pass it the I2C Bus and start to communicate to the chip.  You can optionally pass in a kwarg to the object that contains many configuration options such as mode, sample_rate, gain, and analog_range. Analog range is the most important as it defines if you have a 0-10v sensor, 4-20mA, or any other. The values passed won't be an exact match to what the board says it is as we put a safety buffer to keep the inputs from taking too much power. For instance a 0-10 is actually 0-11.17.
+Once the library is imported and the I2C Bus created you can create a MCP3428 object, pass it the I2C Bus and start to communicate to the chip.  You can optionally pass in a kwarg to the object that contains many configuration options such as mode, sample_rate, gain, and analog_range. Analog range is the most important as it defines if you have a 0-10v sensor, 4-20mA, or any other. The values passed won't be an exact match to what the board says it is as we put a safety buffer to keep the inputs from taking too much power. For instance a 0-10 is actually 0-11.17.
 
 The default values for these configuration option are:
 {'address': 0x68, 'mode': 0x10, 'sample_rate': 0x08, 'gain': 0x00, 'analog_range': [0, 11.17]}
