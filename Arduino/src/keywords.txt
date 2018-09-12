@@ -1,0 +1,6 @@
+MCP3428	KEYWORD1
+init	KEYWORD2
+setAddress	KEYWORD2
+takeReadings	KEYWORD2
+convertData	KEYWORD2
+readChannel	KEYWORD2
